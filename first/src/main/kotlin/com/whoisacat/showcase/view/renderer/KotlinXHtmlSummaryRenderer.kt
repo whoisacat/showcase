@@ -142,49 +142,54 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                             document.getElementById("download-pdf").addEventListener("click", function() {
                                 const { jsPDF } = window.jspdf;
 
-                                html2canvas(document.body).then(canvas => {
-                                    const imgData = canvas.toDataURL('image/png');
-                                    const pdf = new jsPDF('p', 'mm', 'a4');
-                                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                                    const pdfHeight = pdf.internal.pageSize.getHeight();
-                                    const imgProps = pdf.getImageProperties(imgData);
-                                    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                        html2canvas(document.body).then(canvas => {
+                            const imgData = canvas.toDataURL('image/png');
+                            const pdf = new jsPDF('p', 'mm', 'a4');
+                            const pdfWidth = pdf.internal.pageSize.getWidth();
+                            const pdfHeight = pdf.internal.pageSize.getHeight();
+                            const imgProps = pdf.getImageProperties(imgData);
+                            const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                                    const headerHeight = 10;
-                                    const footerHeight = 10;
-                                    const effectivePdfHeight = pdfHeight - headerHeight - footerHeight;
+                            const headerHeight = 10;
+                            const footerHeight = 10;
+                            const effectivePdfHeight = pdfHeight - headerHeight - footerHeight;
 
-                                    let heightLeft = imgHeight;
-                                    let position = 0;
+                            const addHeaderFooter = (pdf, pageNumber) => {
+                                pdf.setFontSize(10);
+                                pdf.text('Header', pdfWidth / 2, headerHeight / 2, { align: 'center' });
+                                pdf.text('Footer', pdfWidth / 2, pdfHeight - footerHeight / 2, { align: 'center' });
+                            };
 
-                                    const addHeaderFooter = (pdf, pageNumber) => {
-                                        pdf.setFontSize(10);
-                                        pdf.text('Header', pdfWidth / 2, headerHeight / 2, { align: 'center' });
-                                        pdf.text('Footer', pdfWidth / 2, pdfHeight - footerHeight / 2, { align: 'center' });
-                                    };
+                            let heightLeft = imgHeight;
+                            let position = 0;
+                            let pageNumber = 1;
 
-                                    pdf.addImage(imgData, 'PNG', 0, headerHeight, pdfWidth, imgHeight);
-                                    addHeaderFooter(pdf, 1);
-                                    heightLeft -= effectivePdfHeight;
+                            while (heightLeft > 0) {
+                                let pageCanvas = document.createElement('canvas');
+                                pageCanvas.width = canvas.width;
+                                pageCanvas.height = (effectivePdfHeight * canvas.width) / pdfWidth;
 
-                                    let pageNumber = 2;
-                                    while (heightLeft >= 0) {
-                                        position = heightLeft - imgHeight + headerHeight;
-                                        pdf.addPage();
-                                        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-                                        addHeaderFooter(pdf, pageNumber);
-                                        heightLeft -= effectivePdfHeight;
-                                        pageNumber++;
-                                    }
+                                let pageContext = pageCanvas.getContext('2d');
+                                pageContext.drawImage(canvas, 0, position * canvas.width / pdfWidth, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
 
-                                    pdf.save('resume.pdf');
-                                });
-                            });
+                                let pageImgData = pageCanvas.toDataURL('image/png');
+                                if (pageNumber > 1) pdf.addPage();
+                                pdf.addImage(pageImgData, 'PNG', 0, headerHeight, pdfWidth, effectivePdfHeight);
+                                addHeaderFooter(pdf, pageNumber);
+
+                                heightLeft -= effectivePdfHeight;
+                                position += effectivePdfHeight;
+                                pageNumber++;
+                            }
+
+                            pdf.save('resume.pdf');
                         });
-                    """.trimIndent()
-                    )
-                }
-            }
+                    });
+                });
+            """.trimIndent()
+        )
+    }
+}
         }
         body {
             div("header-container") {
