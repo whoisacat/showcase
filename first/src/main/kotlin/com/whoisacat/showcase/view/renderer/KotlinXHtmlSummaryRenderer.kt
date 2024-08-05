@@ -14,10 +14,10 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
             meta(charset = "UTF-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
             title { +"Резюме - ${summary.person.firstName} ${summary.person.lastName}" }
+            link(rel = "stylesheet", href = "https://fonts.googleapis.com/icon?family=Material+Icons")
             style {
                 unsafe {
-                    raw(
-                        """
+                    raw("""
                         body {
                             display: flex;
                             flex-direction: column;
@@ -28,11 +28,12 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                         }
                         .header-container {
                             width: 100%;
-                            background-color: #d7DadC; /* бирюзовый цвет */
+                            background-color: #E8EAED;
                         }
                         .header {
                             display: flex;
                             justify-content: space-between;
+                            align-items: center;
                             width: 100%;
                             padding: 20px;
                             box-sizing: border-box;
@@ -44,6 +45,13 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                         .header h1, .header h2 {
                             margin: 0;
                             white-space: nowrap;
+                        }
+                        .header h1 {
+                            align-self: flex-end;
+                        }
+                        .header h2 {
+                            align-self: flex-start;
+                            margin-top: auto;
                         }
                         .content {
                             max-width: 750px;
@@ -128,68 +136,37 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                                 padding: 10px 0;
                             }
                         }
-                    """.trimIndent()
-                )
-            }
-        }
-        script(src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js") {}
-        script(src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js") {}
-        script {
-            unsafe {
-                raw(
-                    """
-                        document.addEventListener("DOMContentLoaded", function() {
-                            document.getElementById("download-pdf").addEventListener("click", function() {
-                                const { jsPDF } = window.jspdf;
-
-                        html2canvas(document.body).then(canvas => {
-                            const imgData = canvas.toDataURL('image/png');
-                            const pdf = new jsPDF('p', 'mm', 'a4');
-                            const pdfWidth = pdf.internal.pageSize.getWidth();
-                            const pdfHeight = pdf.internal.pageSize.getHeight();
-                            const imgProps = pdf.getImageProperties(imgData);
-                            const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                            const headerHeight = 10;
-                            const footerHeight = 10;
-                            const effectivePdfHeight = pdfHeight - headerHeight - footerHeight;
-
-                            const addHeaderFooter = (pdf, pageNumber) => {
-                                pdf.setFontSize(10);
-                                pdf.text('Header', pdfWidth / 2, headerHeight / 2, { align: 'center' });
-                                pdf.text('Footer', pdfWidth / 2, pdfHeight - footerHeight / 2, { align: 'center' });
-                            };
-
-                            let heightLeft = imgHeight;
-                            let position = 0;
-                            let pageNumber = 1;
-
-                            while (heightLeft > 0) {
-                                let pageCanvas = document.createElement('canvas');
-                                pageCanvas.width = canvas.width;
-                                pageCanvas.height = (effectivePdfHeight * canvas.width) / pdfWidth;
-
-                                let pageContext = pageCanvas.getContext('2d');
-                                pageContext.drawImage(canvas, 0, position * canvas.width / pdfWidth, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
-
-                                let pageImgData = pageCanvas.toDataURL('image/png');
-                                if (pageNumber > 1) pdf.addPage();
-                                pdf.addImage(pageImgData, 'PNG', 0, headerHeight, pdfWidth, effectivePdfHeight);
-                                addHeaderFooter(pdf, pageNumber);
-
-                                heightLeft -= effectivePdfHeight;
-                                position += effectivePdfHeight;
-                                pageNumber++;
+                        .floating-print-button {
+                            position: fixed;
+                            bottom: 10px;
+                            right: 10px;
+                            width: 50px;
+                            height: 50px;
+                            background-color: transparent; /* Прозрачный фон */
+                            color: #E8EAED; /* Цвет иконки */
+                            border: 2px solid #E8EAED; /* Цвет и толщина контура */
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 24px;
+                            cursor: pointer;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                            z-index: 1000;
+                            transition: background-color 0.3s, color 0.3s; /* Плавный переход для фона и цвета */
+                        }
+                        .floating-print-button:hover {
+                            background-color: #E8EAED; /* Цвет фона при наведении */
+                            color: white; /* Цвет иконки при наведении */
+                        }
+                        @media print {
+                            .floating-print-button {
+                                display: none;
                             }
-
-                            pdf.save('resume.pdf');
-                        });
-                    });
-                });
-            """.trimIndent()
-        )
-    }
-}
+                        }
+                    """.trimIndent())
+                }
+            }
         }
         body {
             div("header-container") {
@@ -203,27 +180,23 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                 }
             }
             div("content") {
-                button {
-                    id = "download-pdf"
-                    +"Скачать в PDF"
-                }
                 div("info-container") {
                     div("contacts") {
-                        summary.contacts.stream().map {
+                        summary.contacts.forEach {
                             p {
                                 strong { +"${it.title}: " }
                                 a(href = it.link) { +it.text }
                             }
-                        }.toList()
+                        }
                     }
                     div("work-label") {
                         h1 { +summary.label }
                         p {
                             strong { +"Формы сотрудничества:" }
                             ul {
-                                summary.cooperationForms.stream()
-                                    .map { li { +it } }
-                                    .toList()
+                                summary.cooperationForms.forEach {
+                                    li { +it }
+                                }
                             }
                         }
                         span {
@@ -236,74 +209,66 @@ class KotlinXHtmlSummaryRenderer : SummaryRenderer {
                 h2 { +"Обо мне" }
                 p { +summary.aboutMe }
 
-                if (!summary.skills.isEmpty()) {
+                if (summary.skills.isNotEmpty()) {
                     h2 { +"Ключевые навыки" }
                     div("skills") {
-                        summary.skills.stream()
-                            .map {
-                                div("skill") { +it }
-                            }
-                            .toList()
+                        summary.skills.forEach {
+                            div("skill") { +it }
+                        }
                     }
                 }
-                if (!summary.expirience.isEmpty()) {
+                if (summary.expirience.isNotEmpty()) {
                     h2 { +"Опыт работы" }
-                    summary.expirience.stream()
-                        .map {
-                            h3 { +"${it.companyTitle}, ${it.companyCity}" }
-                            p { strong { +it.position } }
-                            p { strong { +it.datePeriod.toString() } }
-                            p { +it.description }
-                            if (!it.achievements.isEmpty()) {
-                                p { +"Достижения:" }
-                                ul {
-                                    it.achievements.stream()
-                                        .map { li { +it } }
-                                        .toList()
+                    summary.expirience.forEach {
+                        h3 { +"${it.companyTitle}, ${it.companyCity}" }
+                        p { strong { +it.position } }
+                        p { strong { +it.datePeriod.toString() } }
+                        p { +it.description }
+                        if (it.achievements.isNotEmpty()) {
+                            p { +"Достижения:" }
+                            ul {
+                                it.achievements.forEach { achievement ->
+                                    li { +achievement }
                                 }
                             }
-                            if (!it.technologies.isEmpty()) {
-                                details {
-                                    summary { +"Технологии" }
-                                    ul("tech-list") {
-                                        it.technologies.stream()
-                                            .map { li { +it } }
-                                            .toList()
+                        }
+                        if (it.technologies.isNotEmpty()) {
+                            details {
+                                summary { +"Технологии" }
+                                ul("tech-list") {
+                                    it.technologies.forEach { technology ->
+                                        li { +technology }
                                     }
                                 }
                             }
                         }
-                        .toList()
+                    }
                 }
-                if (!summary.edu.isEmpty()) {
-                    val mainEdu = summary.edu.stream()
-                        .filter { it.type.equals(Type.MAIN) }
-                        .toList()
-                    if (!mainEdu.isEmpty()) {
+                if (summary.edu.isNotEmpty()) {
+                    val mainEdu = summary.edu.filter { it.type == Type.MAIN }
+                    if (mainEdu.isNotEmpty()) {
                         h2 { +"Образование" }
-                        mainEdu
-                            .sorted()
-                            .map {
-                                h3 { +it.degree!! }
-                                p { +"${it.graduationDate} ${it.institution} ${it.residenceCity}" }
-                                p { +it.faculty!! }
-                                p { +it.speciality }
-                            }
-                            .toList()
+                        mainEdu.sorted().forEach {
+                            h3 { +it.degree!! }
+                            p { +"${it.graduationDate} ${it.institution} ${it.residenceCity}" }
+                            p { +it.faculty!! }
+                            p { +it.speciality }
+                        }
                     }
 
-                    val trainings = summary.edu.stream()
-                        .filter { it.type.equals(Type.TRAINING) }
-                        .toList()
-                    if (!trainings.isEmpty()) {
+                    val trainings = summary.edu.filter { it.type == Type.TRAINING }
+                    if (trainings.isNotEmpty()) {
                         h2 { +"Повышение квалификации, курсы" }
-                        trainings
-                            .sorted()
-                            .map {
-                                p { +"${it.graduationDate} ${it.institution} ${it.speciality}" }
-                            }
-                            .toList()
+                        trainings.sorted().forEach {
+                            p { +"${it.graduationDate} ${it.institution} ${it.speciality}" }
+                        }
                     }
+                }
+            }
+            button(classes = "floating-print-button") {
+                span("material-icons") {
+                    +"print"
+                    onClick = "window.print()"
                 }
             }
         }
