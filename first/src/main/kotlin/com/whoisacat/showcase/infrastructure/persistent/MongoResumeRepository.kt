@@ -1,19 +1,32 @@
-package com.whoisacat.showcase.application.service
+package com.whoisacat.showcase.infrastructure.persistent
 
-import com.whoisacat.showcase.domain.entity.*
-import org.springframework.stereotype.Service
+import com.whoisacat.showcase.domain.entity.Contact
+import com.whoisacat.showcase.domain.entity.DatePeriod
+import com.whoisacat.showcase.domain.entity.Education
+import com.whoisacat.showcase.domain.entity.Expirience
+import com.whoisacat.showcase.domain.entity.Person
+import com.whoisacat.showcase.domain.entity.Resume
+import com.whoisacat.showcase.domain.infrastructure.ResumeRepository
+import com.whoisacat.showcase.infrastructure.repository.ResumeDao
+import java.lang.RuntimeException
 import java.time.LocalDate
+import org.springframework.stereotype.Component
 
-@Service
-class SimpleSummaryService : SummaryService {
-    override fun get(): Summary {
-        return Summary(
+@Component
+class MongoResumeRepository(private val dao: ResumeDao) : ResumeRepository {
+
+    override fun save(resume: Resume) {
+        dao.save(resume)
+    }
+
+    override fun get(): Resume {
+        val resume = Resume(
             person = Person(
                 lastName = "Цыпляшов",
                 firstName = "Антон",
                 birthDate = LocalDate.of(1987, 7, 13),
                 city = "Екатеринбург",
-                cityzenship = "Россия"
+                citizenship = "Россия"
             ),
             contacts = setOf(
                 Contact(title = "email", link = "mailto:whoisacat@gmail.com", text = "whoisacat@gmail.com"),
@@ -41,32 +54,49 @@ class SimpleSummaryService : SummaryService {
                     companyTitle = "Системные решения",
                     companyCity = "Москва",
                     description = "Разработка бэкенд части BI системы. Во время работы удалось:",
-                    achievements = setOf("вернуть юнит тестирование в проекты",
+                    achievements = setOf(
+                        "вернуть юнит тестирование в проекты",
                         "внедрить интеграционное тестирование",
                         "внедрить поиск через opensearch",
                         "ускорить формирование нескольких отчетов (примерно в 20-200 раз)",
                         "реализовать порядка 20 фич в проект",
-                        "исправить 4 архитектурных недоработки"),
+                        "исправить 4 архитектурных недоработки"
+                    ),
                     technologies = setOf("java21", "spring", "maven", "postgres", "apache poi")
                 ),
                 Expirience(
                     position = "Программист (back)",
-                    datePeriod = DatePeriod(LocalDate.of(2022, 12, 1),
-                        LocalDate.of(2024, 1, 31)),
+                    datePeriod = DatePeriod(
+                        LocalDate.of(2022, 12, 1),
+                        LocalDate.of(2024, 1, 31)
+                    ),
                     companyTitle = "Газпромбанк, ОАО",
                     companyCity = "Москва",
                     description = """Автоматизация, стандартизация, унификация решений администрирования процессов и 
                         администрированием процессов разработки. Самостоятельно либо во главе ситуационной группы""",
-                    achievements = setOf("вернуть юнит тестирование в проекты",
+                    achievements = setOf(
+                        "вернуть юнит тестирование в проекты",
                         "создал 4 приложения различной сложности",
                         "внедрил трассировку в проекты департамента, что снизило скорость расследования инцидентов (~40%);",
-                        "администрированием процессов снял нагрузку с руководителя управления"),
-                    technologies = setOf("java 8", "java 11", "java 17", "Spring Boot", "Spring Kafka", "gradle", "JAXB", "OTLP", "Spring Shell", "Keycloak API")
+                        "администрированием процессов снял нагрузку с руководителя управления"
+                    ),
+                    technologies = setOf(
+                        "java 8",
+                        "java 11",
+                        "java 17",
+                        "Spring Boot",
+                        "Spring Kafka",
+                        "gradle",
+                        "JAXB",
+                        "OTLP",
+                        "Spring Shell",
+                        "Keycloak API"
+                    )
                 )
             ),
             edu = setOf(
                 Education(
-                    Type.MAIN,
+                    Education.Type.MAIN,
                     residenceCity = "Екатеринбург",
                     institution = "Уральский федеральный университет имени первого Президента России Б.Н. Ельцина",
                     graduationDate = 2016,
@@ -75,7 +105,7 @@ class SimpleSummaryService : SummaryService {
                     degree = "бакалавр"
                 ),
                 Education(
-                    Type.TRAINING,
+                    Education.Type.TRAINING,
                     residenceCity = "Москва",
                     institution = "Отус Онлайн-Образование",
                     graduationDate = 2021,
@@ -84,7 +114,7 @@ class SimpleSummaryService : SummaryService {
                     degree = null
                 ),
                 Education(
-                    Type.TRAINING,
+                    Education.Type.TRAINING,
                     residenceCity = "Москва",
                     institution = "Отус Онлайн-Образование",
                     graduationDate = 2024,
@@ -113,5 +143,11 @@ class SimpleSummaryService : SummaryService {
                 "DDD"
             )
         )
+//        dao.save(resume)
+        return resume
+    }
+
+    override fun get(id: String): Resume {
+        return dao.findById(id).orElseThrow {RuntimeException("Resume not found by id $id")}
     }
 }

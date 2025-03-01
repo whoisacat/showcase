@@ -12,8 +12,8 @@ data class Education(
     override fun compareTo(other: Education): Int {
         return this.graduationDate.compareTo(other.graduationDate)
     }
-}
 
-enum class Type {
-    MAIN, TRAINING
+    enum class Type {
+        MAIN, TRAINING
+    }
 }

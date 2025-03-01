@@ -1,6 +1,7 @@
 package com.whoisacat.showcase.domain.entity
 
-data class Summary(
+data class Resume(
+    var id: String? = null,
     val person: Person,
     val contacts: Set<Contact>,
     val label: String,

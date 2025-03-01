@@ -7,5 +7,5 @@ class Person(
     val firstName: String,
     val birthDate: LocalDate,
     val city: String,
-    val cityzenship: String
+    val citizenship: String
 )

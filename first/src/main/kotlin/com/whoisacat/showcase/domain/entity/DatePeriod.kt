@@ -2,6 +2,7 @@ package com.whoisacat.showcase.domain.entity
 
 import java.time.LocalDate
 import java.time.Month
+import java.time.Period
 import java.time.format.TextStyle
 import java.util.*
 
@@ -20,11 +21,13 @@ data class DatePeriod(val startDate: LocalDate, val endDate: LocalDate? = null) 
     }
 
     private fun countDuration(): String {
-        val years = (endDate ?: LocalDate.now()).year.minus(startDate.year)
-        if (years > 4) return "$years ${getFormOfTimePeriod(years, YEAR)}"
-        val mounths = (endDate ?: LocalDate.now()).month.value.minus(startDate.month.value)
-        if (mounths < 12) return "$mounths ${getFormOfTimePeriod(mounths, MOUNTH)}"
-        return "$years ${getFormOfTimePeriod(years, YEAR)} $mounths ${getFormOfTimePeriod(mounths, MOUNTH)}"
+        val period = Period.between(startDate, endDate ?: LocalDate.now())
+        val years = period.years
+        val months = period.months + if (period.days > 20) 1 else 0
+
+        return (if (years > 0) "$years ${getFormOfTimePeriod(years, YEAR)}" else "") +
+                (if (years > 0 && months > 0) " " else "") +
+                if (months > 0) "$months ${getFormOfTimePeriod(months, MOUNTH)}" else ""
     }
 
     private fun getFormOfTimePeriod(years: Int, key: String): String {

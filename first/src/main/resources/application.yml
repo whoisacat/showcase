@@ -3,6 +3,9 @@
 spring:
   application:
     name: showcase
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/show-case?authSource=admin
 
   security:
     oauth2:
@@ -10,26 +13,6 @@ spring:
         jwt:
           issuer-uri: http://localhost:8090/realms/showcase
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
-
-
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5439/cf-expenses-db}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    platform: postgresql
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 10
-    initialization-mode: always
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
-    generate-ddl: false
-    properties:
-      hibernate:
-        format_sql: true
-    hibernate:
-      ddl-auto: update
 
 springdoc:
   swagger-ui:
@@ -42,5 +25,6 @@ server:
 
 logging:
   level:
-    sun: error
-    root: debug
+    com.whoisacat: trace
+    sun: warn
+    root: warn

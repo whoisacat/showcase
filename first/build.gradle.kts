@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 //    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -39,6 +39,8 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.11.0")
+
+    implementation ("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("org.postgresql:postgresql")
