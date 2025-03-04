@@ -1,6 +1,6 @@
 package com.whoisacat.showcase.domain.entity
 
-data class Expirience(
+data class Experience(
     val position: String,
     val datePeriod: DatePeriod,
     val companyTitle: String,

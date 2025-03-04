@@ -1,8 +1,9 @@
 package com.whoisacat.showcase.application.service
 
-import com.whoisacat.showcase.domain.entity.Resume
+import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 
 interface ResumeService {
-    fun get(): Resume
-    fun get(id: String): Resume
+    fun get(): ResumeDto
+    fun get(id: String): ResumeDto
+    fun update(dto: ResumeDto): ResumeDto
 }
