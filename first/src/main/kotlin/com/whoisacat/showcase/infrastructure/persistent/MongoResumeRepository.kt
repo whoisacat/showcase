@@ -3,7 +3,7 @@ package com.whoisacat.showcase.infrastructure.persistent
 import com.whoisacat.showcase.domain.entity.Contact
 import com.whoisacat.showcase.domain.entity.DatePeriod
 import com.whoisacat.showcase.domain.entity.Education
-import com.whoisacat.showcase.domain.entity.Expirience
+import com.whoisacat.showcase.domain.entity.Experience
 import com.whoisacat.showcase.domain.entity.Person
 import com.whoisacat.showcase.domain.entity.Resume
 import com.whoisacat.showcase.domain.infrastructure.ResumeRepository
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component
 @Component
 class MongoResumeRepository(private val dao: ResumeDao) : ResumeRepository {
 
-    override fun save(resume: Resume) {
-        dao.save(resume)
+    override fun save(resume: Resume): Resume {
+        return dao.save(resume)
     }
 
     override fun get(): Resume {
@@ -47,8 +47,8 @@ class MongoResumeRepository(private val dao: ResumeDao) : ResumeRepository {
                 данных до микросервисов с высоконагруженными ETL процессами. Я также интересуюсь архитектурой систем и 
                 участвую в профессиональных сообществах. В свободное время люблю сноуборд, волейбол и путешествия, 
                 иногда рисую пальмочки в углу листа бумаги.""".trimIndent(),
-            expirience = setOf(
-                Expirience(
+            experience = setOf(
+                Experience(
                     position = "Программист (back)",
                     datePeriod = DatePeriod(LocalDate.of(2024, 2, 15)),
                     companyTitle = "Системные решения",
@@ -64,7 +64,7 @@ class MongoResumeRepository(private val dao: ResumeDao) : ResumeRepository {
                     ),
                     technologies = setOf("java21", "spring", "maven", "postgres", "apache poi")
                 ),
-                Expirience(
+                Experience(
                     position = "Программист (back)",
                     datePeriod = DatePeriod(
                         LocalDate.of(2022, 12, 1),

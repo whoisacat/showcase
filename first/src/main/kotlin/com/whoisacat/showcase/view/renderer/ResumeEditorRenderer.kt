@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.view.renderer
 
-import com.whoisacat.showcase.domain.entity.Resume
+import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 
 interface ResumeEditorRenderer {
-    fun resumeEditorPage(resume: Resume): String
+    fun resumeEditorPage(resume: ResumeDto): String
 }

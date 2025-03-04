@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.view.renderer
 
-import com.whoisacat.showcase.domain.entity.Resume
-import com.whoisacat.showcase.domain.entity.Education.Type
+import com.whoisacat.showcase.infrastructure.dto.EducationDto.Type
+import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
@@ -55,7 +55,7 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
 
     private val logger = KotlinLogging.logger {}
 
-    override fun resumePage(resume: Resume, fields: List<String>?) = createHTMLDocument().html {
+    override fun resumePage(resume: ResumeDto, fields: List<String>?) = createHTMLDocument().html {
         head {
             meta(charset = "UTF-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
@@ -399,16 +399,16 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                         }
                     }
                 }
-                if (resume.expirience.isNotEmpty()
+                if (resume.experience.isNotEmpty()
                     && (fields?.contains(EXPERIENCE) != false
                             || fields.contains(EXPERIENCE_TECH))) {
                     h2 { +EXPERIENCE_TITLE }
                 }
-                if (resume.expirience.isNotEmpty()
+                if (resume.experience.isNotEmpty()
                     && fields?.contains(EXPERIENCE) != false) {
                     addListWithOptionalItems(
                         fields = fields,
-                        set = resume.expirience,
+                        set = resume.experience,
                         resumeBlockName = EXPERIENCE,
                         consumer = {
                             val company = LinkedList<String>()
@@ -549,7 +549,7 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                         +EXPERIENCE_TITLE
                     }
                     checksForList(
-                        resume.expirience,
+                        resume.experience,
                         fields,
                         appendedStringSupplier = { "${it.companyTitle}  ${it.companyCity}  ${it.datePeriod}" },
                         EXPERIENCE_TITLE,

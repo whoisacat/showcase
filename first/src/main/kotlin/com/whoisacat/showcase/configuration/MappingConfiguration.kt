@@ -1,4 +1,4 @@
-package com.whoisacat.cashflow.configuration
+package com.whoisacat.showcase.configuration
 
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.MapperConfig

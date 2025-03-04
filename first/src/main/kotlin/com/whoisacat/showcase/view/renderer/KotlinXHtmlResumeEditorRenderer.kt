@@ -1,14 +1,14 @@
 package com.whoisacat.showcase.view.renderer
 
 import kotlinx.html.*
-import com.whoisacat.showcase.domain.entity.Resume
+import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import org.springframework.stereotype.Service
 
 @Service
 class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
-    override fun resumeEditorPage(resume: Resume) = createHTMLDocument().html {
+    override fun resumeEditorPage(resume: ResumeDto) = createHTMLDocument().html {
         head {
             meta { charset = "UTF-8" }
             meta { name = "viewport"; content = "width=device-width, initial-scale=1.0" }
