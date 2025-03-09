@@ -1,6 +1,7 @@
 package com.whoisacat.showcase.infrastructure.controller
 
 import com.whoisacat.showcase.application.service.ResumeService
+import com.whoisacat.showcase.infrastructure.dto.ResumeCDto
 import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 import org.springframework.web.bind.annotation.*
 
@@ -15,7 +16,7 @@ class ResumeRestController(
     }
 
     @PutMapping("/resume/{id}")
-    fun getCurrentEditor(@RequestBody dto: ResumeDto): ResumeDto {
+    fun getCurrentEditor(@RequestBody dto: ResumeCDto): ResumeDto {
         return resumeService.update(dto)
     }
 }

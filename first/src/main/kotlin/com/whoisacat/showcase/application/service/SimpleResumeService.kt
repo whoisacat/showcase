@@ -2,6 +2,7 @@ package com.whoisacat.showcase.application.service
 
 import com.whoisacat.showcase.application.mapper.ResumeMapper
 import com.whoisacat.showcase.domain.infrastructure.ResumeRepository
+import com.whoisacat.showcase.infrastructure.dto.ResumeCDto
 import com.whoisacat.showcase.infrastructure.dto.ResumeDto
 import org.springframework.stereotype.Service
 
@@ -19,7 +20,7 @@ class SimpleResumeService(
         return mapper.map(repository.get(id))
     }
 
-    override fun update(dto: ResumeDto): ResumeDto {
+    override fun update(dto: ResumeCDto): ResumeDto {
         if (dto.id == null) {
             TODO("")
         } else {

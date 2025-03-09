@@ -1,8 +1,8 @@
 package com.whoisacat.showcase.infrastructure.dto
 
-data class ExperienceDto(
+data class ExperienceCDto(
     val position: String,
-    val datePeriod: String,
+    val datePeriod: DatePeriodDto,
     val companyTitle: String,
     val companyCity: String,
     val description: String,

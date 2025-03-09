@@ -416,10 +416,11 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                             if (fields?.contains(COMPANY_CITY) != false) company.add(it.companyCity)
                             if (company.isNotEmpty()) h3 { +company.stream().collect(Collectors.joining(", ")) }
                             if (fields?.contains(EXPERIENCE_POSITION) != false) p { strong { +it.position } }
-                            if (fields?.contains(EXPERIENCE_DATE) != false) p { strong { +it.datePeriod.toString() } }
+                            logger.trace { "date ${fields?.contains(EXPERIENCE_DATE) != false} t.datePeriod ${it.datePeriod}" }
+                            if (fields?.contains(EXPERIENCE_DATE) != false) p { strong { +it.datePeriod } }
                             if (fields?.contains(EXPERIENCE_DESCRIPTION) != false) p { +it.description }
                             if (fields?.contains(EXPERIENCE_ACHIEVEMENTS) != false && it.achievements.isNotEmpty()) {
-                                p { +"Достижения:" }
+                                p { +"$EXPERIENCE_ACHIEVEMENTS_TITLE:" }
                                 ul {
                                     it.achievements.forEach { achievement ->
                                         li { +achievement }
