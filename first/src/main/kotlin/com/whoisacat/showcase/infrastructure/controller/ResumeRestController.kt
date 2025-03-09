@@ -12,11 +12,11 @@ class ResumeRestController(
 
     @GetMapping("/resume/{id}")
     fun getCurrent(@PathVariable id: String, @RequestParam fields: List<String>?): ResumeDto {
-        return resumeService.get(id)
+        return resumeService.getReadDto(id)
     }
 
     @PutMapping("/resume/{id}")
-    fun getCurrentEditor(@RequestBody dto: ResumeCDto): ResumeDto {
+    fun getCurrentEditor(@RequestBody dto: ResumeCDto): ResumeCDto {
         return resumeService.update(dto)
     }
 }

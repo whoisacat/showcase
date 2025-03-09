@@ -20,21 +20,21 @@ class ResumeController(
 
     @GetMapping("/resume-page/{id}", produces = [TEXT_HTML_UTF8])
     fun getCurrent(@PathVariable id: String, @RequestParam fields: List<String>?): String {
-        val resume: ResumeDto = resumeService.get(id)
+        val resume: ResumeDto = resumeService.getReadDto(id)
         logger.trace { "resume id ${resume.id}" }
         return resumeRenderer.resumePage(resume, fields)
     }
 
     @GetMapping("/resume-editor/{id}", produces = [TEXT_HTML_UTF8])
     fun getCurrentEditor(@PathVariable id: String, @RequestParam fields: List<String>?): String {
-        val resume: ResumeDto = resumeService.get(id)
+        val resume: ResumeCDto = resumeService.getCreateDto(id)
         logger.trace { "resume id ${resume.id}" }
         return editRenderer.resumeEditorPage(resume)
     }
 
-    @PutMapping("/resume-edit/{id}", produces = [TEXT_HTML_UTF8])
+    @PutMapping("/resume-editor/{id}", produces = [TEXT_HTML_UTF8])
     fun getCurrentEditor(@RequestBody dto: ResumeCDto): String {
-        val resume: ResumeDto = resumeService.update(dto)
+        val resume: ResumeCDto = resumeService.update(dto)
         logger.trace { "resume id ${resume.id} is updated" }
         return editRenderer.resumeEditorPage(resume)
     }

@@ -12,21 +12,25 @@ class SimpleResumeService(
     private val mapper: ResumeMapper
 ) : ResumeService {
 
-    override fun get(): ResumeDto {
-        return mapper.map(repository.get())
+    override fun getReadDto(): ResumeDto {
+        return mapper.mapToRead(repository.get())
     }
 
-    override fun get(id: String): ResumeDto {
-        return mapper.map(repository.get(id))
+    override fun getReadDto(id: String): ResumeDto {
+        return mapper.mapToRead(repository.get(id))
     }
 
-    override fun update(dto: ResumeCDto): ResumeDto {
+    override fun getCreateDto(id: String): ResumeCDto {
+        return mapper.mapToCreate(repository.get(id))
+    }
+
+    override fun update(dto: ResumeCDto): ResumeCDto {
         if (dto.id == null) {
             TODO("")
         } else {
             var resume = repository.get(dto.id)
-            resume = mapper.map(dto, resume)
-            return mapper.map(repository.save(resume))
+            resume = mapper.mapToRead(dto, resume)
+            return mapper.mapToCreate(repository.save(resume))
         }
     }
 }
