@@ -1,4 +1,4 @@
-package com.whoisacat.showcase.infrastructure.controller
+package com.whoisacat.showcase.infrastructure.controller.rest
 
 import com.whoisacat.showcase.application.service.ResumeService
 import com.whoisacat.showcase.infrastructure.dto.ResumeCDto

@@ -1,5 +1,6 @@
 package com.whoisacat.showcase.view.renderer
 
+import com.whoisacat.showcase.infrastructure.dto.EducationDto
 import kotlinx.html.*
 import com.whoisacat.showcase.infrastructure.dto.ResumeCDto
 import kotlinx.html.dom.createHTMLDocument
@@ -102,7 +103,7 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             min-width: 100%;
                         }
                     }
-                    .experience-entry {
+                    .experience-entry, .education-entry {
                         border: 1px solid #ccc;
                         border-radius: 8px;
                         padding: 15px;
@@ -112,10 +113,10 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
                         transition: background-color 0.3s ease;
                     }
-                    .experience-entry:hover {
+                    .experience-entry:hover, .education-entry:hover {
                         background-color: #f1f1f1;
                     }
-                    .remove-experience-btn {
+                    .remove-experience-btn, .remove-education-btn {
                         position: absolute;
                         top: 10px;
                         right: 10px;
@@ -127,10 +128,10 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         cursor: pointer;
                         transition: background-color 0.3s ease, transform 0.1s ease;
                     }
-                    .remove-experience-btn:hover {
+                    .remove-experience-btn:hover, .remove-education-btn:hover {
                         background-color: #f5c6cb;
                     }
-                    .remove-experience-btn:active {
+                    .remove-experience-btn:active, .remove-education-btn:active {
                         background-color: #f1b0b7;
                         transform: scale(0.98);
                     }
@@ -252,6 +253,9 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     }
                     function removeExperienceField(button) {
                         button.closest('.experience-entry').remove();
+                    }
+                    function removeEducationField(button) {
+                        button.closest('.education-entry').remove();
                     }
                     function addAchievementField() {
                         var container = document.querySelector(".achievements-container");
@@ -469,6 +473,64 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         button(classes = "add-btn", type = ButtonType.button) {
                             +"➕ Добавить опыт"
                             attributes["onclick"] = "addExperienceField()"
+                        }
+                    }
+
+                    div("section") {
+                        label { +"Образование" }
+                        div {
+                            id = "educationContainer"
+                            resume.edu.forEach { education ->
+                                div("education-entry") {
+                                    button(classes = "remove-education-btn", type = ButtonType.button) {
+                                        +"❌"
+                                        attributes["onclick"] = "removeEducationField(this)"
+                                    }
+                                    div("group-fields") {
+                                        div("section") {
+                                            label { +"Тип образования" }
+                                            select {
+                                                option { +"Основное"; value = "MAIN"; if (education.type == EducationDto.Type.MAIN) attributes["selected"] = "selected" }
+                                                option { +"Дополнительное"; value = "TRAINING"; if (education.type == EducationDto.Type.TRAINING) attributes["selected"] = "selected" }
+                                            }
+                                        }
+                                        div("section") {
+                                            label { +"Город обучения" }
+                                            textInput { value = education.residenceCity }
+                                        }
+                                    }
+                                    div("section") {
+                                        label { +"Учебное заведение" }
+                                        textInput { value = education.institution }
+                                    }
+                                    div("section") {
+                                        label { +"Специальность" }
+                                        textInput { value = education.speciality }
+                                    }
+
+                                    if (education.type == EducationDto.Type.MAIN) {
+                                        div("group-fields") {
+                                            div("section") {
+                                                label { +"Факультет" }
+                                                textInput { value = education.faculty ?: "" }
+                                            }
+                                            div("section") {
+                                                label { +"Степень" }
+                                                textInput { value = education.degree ?: "" }
+                                            }
+                                        }
+                                    }
+
+                                    div("section") {
+                                        label { +"Год окончания" }
+                                        input(InputType.number) { value = education.graduationDate.toString() }
+                                    }
+                                }
+                            }
+                        }
+                        button(classes = "add-btn", type = ButtonType.button) {
+                            +"➕ Добавить образование"
+                            attributes["onclick"] = "addEducationField()"
                         }
                     }
                     button { +"Сохранить изменения"; attributes["type"] = "submit" }
