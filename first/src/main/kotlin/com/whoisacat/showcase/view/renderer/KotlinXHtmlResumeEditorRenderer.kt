@@ -27,6 +27,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
                         box-sizing: border-box; 
                     }
+                    .about-textarea {
+                        width: 100%; 
+                        resize: vertical; 
+                        overflow: hidden; 
+                        padding: 10px; 
+                        box-sizing: border-box;
+                    }
                     input:focus, textarea:focus { border-color: #007BFF; outline: none; }
                     .add-btn { 
                         background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px;
@@ -78,6 +85,12 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         }
                         .remove-btn {
                             margin-top: 10px;
+                        }
+                    }
+                    @media screen and (max-width: 900px) {
+                        .flex-container {
+                            flex-direction: column;
+                            gap: 10px;
                         }
                     }
                     .group-fields {
@@ -135,21 +148,28 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         background-color: #f1b0b7;
                         transform: scale(0.98);
                     }
-                    .skills-container, .achievements-container, .technologies-container {
+                    .skills-container, .achievements-container, .technologies-container, .form-group {
                         display: flex;
                         flex-wrap: wrap;
                         gap: 15px;
+                        padding-bottom: 15px;
+                    }
+                    .skills-container {
+                        padding-bottom: 15px;
                     }
                     .skills-container .form-item, 
                     .achievements-container .form-item,
-                    .technologies-container .form-item {
-                        flex: 1 0 calc(33% - 10px);
-                        min-width: calc(33% - 10px);
+                    .technologies-container .form-item,
+                    .form-group .form-item {
+                        flex: 1 0 calc(33.33% - 10px);
+                        max-width: calc(33.33% - 10px);
+                        min-width: calc(33.33% - 10px);
                     }
                     @media screen and (max-width: 900px) {
                         .skills-container .form-item, 
                         .achievements-container .form-item,
-                        .technologies-container .form-item {
+                        .technologies-container .form-item,
+                        .form-group .form-item {
                             flex: 1 0 calc(50% - 10px);
                             min-width: calc(50% - 10px);
                         }
@@ -157,7 +177,8 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     @media screen and (max-width: 600px) {
                         .skills-container .form-item, 
                         .achievements-container .form-item,
-                        .technologies-container .form-item {
+                        .technologies-container .form-item,
+                        .form-group .form-item {
                             flex: 1 0 100%;
                             max-width: 100%;
                             min-width: 100%;
@@ -187,6 +208,17 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                 <button class="remove-btn" type="button" onclick="removeContactField(this)">❌</button>
                             </div>`;
                         container.appendChild(newContactField);
+                    }
+                    function addCooperationField() {
+                        var container = document.querySelector(".form-group");
+                        var newFormField = document.createElement("div");
+                        newFormField.className = "form-item";
+                        newFormField.innerHTML = `
+                           <div class="flex-container">
+                                <input type="text" placeholder="Форма сотрудничества" />
+                                <button class="remove-btn" type="button" onclick="removeFormCoop(this)">❌</button>
+                            </div>`;
+                        container.appendChild(newFormField);
                     }
                     function addSkillField() {
                         var container = document.querySelector(".skills-container");
@@ -248,6 +280,9 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     function removeContactField(button) {
                         button.closest('.contact').remove();
                     }
+                    function removeFormCoop(button) {
+                        button.closest('.form-item').remove();
+                    }
                     function removeSkillField(button) {
                         button.closest('.form-item').remove();
                     }
@@ -285,6 +320,20 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     function removeTechnologyField(button) {
                         button.closest('.form-item').remove();
                     }
+                    function autoResize(textarea) {
+                        textarea.style.height = 'auto'; // Сбрасываем высоту
+                        textarea.style.height = (textarea.scrollHeight) + 'px'; 
+                    }
+                    window.onload = function() {
+                        var aboutTextarea = document.getElementById("about");
+                        if (aboutTextarea) {
+                            autoResize(aboutTextarea);
+                        }
+                        var experienceTextures = document.querySelectorAll(".experience-description"); 
+                        experienceTextures.forEach(function(textarea) { 
+                            autoResize(textarea);
+                        });
+                    };
                     """
                 }
             }
@@ -356,7 +405,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         div("form-group") {
                             resume.cooperationForms.forEach { cooperation ->
                                 div("form-item") {
-                                    textInput { value = cooperation }
+                                    div("flex-container") {
+                                        textInput { value = cooperation }
+                                        button(classes = "remove-btn", type = ButtonType.button) {
+                                            +"❌"
+                                            attributes["onclick"] = "removeFormCoop(this)"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -387,7 +442,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     }
                     div("section") {
                         label { +"Обо мне" }
-                        textArea { id = "about"; rows = "4"; +resume.aboutMe }
+                        textArea {
+                            id = "about"
+                            rows = "1"
+                            +resume.aboutMe
+                            attributes["oninput"] = "autoResize(this)"
+                            classes = setOf("about-textarea")
+                        }
                     }
                     div("section") {
                         label { +"Опыт работы" }
@@ -425,7 +486,12 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                     }
                                     div("section") {
                                         label { +"Описание" }
-                                        textArea { +experience.description }
+                                        textArea {
+                                            rows = "1"
+                                            +experience.description
+                                            attributes["oninput"] = "autoResize(this)"
+                                            classes = setOf("about-textarea", "experience-description")
+                                        }
                                     }
                                     div("section") {
                                         label { +"Достижения" }
