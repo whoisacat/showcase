@@ -27,6 +27,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
                         box-sizing: border-box; 
                     }
+                    .about-textarea {
+                        width: 100%; 
+                        resize: vertical; 
+                        overflow: hidden; 
+                        padding: 10px; 
+                        box-sizing: border-box;
+                    }
                     input:focus, textarea:focus { border-color: #007BFF; outline: none; }
                     .add-btn { 
                         background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px;
@@ -78,6 +85,12 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         }
                         .remove-btn {
                             margin-top: 10px;
+                        }
+                    }
+                    @media screen and (max-width: 900px) {
+                        .flex-container {
+                            flex-direction: column;
+                            gap: 10px;
                         }
                     }
                     .group-fields {
@@ -135,21 +148,28 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         background-color: #f1b0b7;
                         transform: scale(0.98);
                     }
-                    .skills-container, .achievements-container, .technologies-container {
+                    .skills-container, .achievements-container, .technologies-container, .form-group {
                         display: flex;
                         flex-wrap: wrap;
                         gap: 15px;
+                        padding-bottom: 15px;
+                    }
+                    .skills-container {
+                        padding-bottom: 15px;
                     }
                     .skills-container .form-item, 
                     .achievements-container .form-item,
-                    .technologies-container .form-item {
-                        flex: 1 0 calc(33% - 10px);
-                        min-width: calc(33% - 10px);
+                    .technologies-container .form-item,
+                    .form-group .form-item {
+                        flex: 1 0 calc(33.33% - 10px);
+                        max-width: calc(33.33% - 10px);
+                        min-width: calc(33.33% - 10px);
                     }
                     @media screen and (max-width: 900px) {
                         .skills-container .form-item, 
                         .achievements-container .form-item,
-                        .technologies-container .form-item {
+                        .technologies-container .form-item,
+                        .form-group .form-item {
                             flex: 1 0 calc(50% - 10px);
                             min-width: calc(50% - 10px);
                         }
@@ -157,7 +177,8 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     @media screen and (max-width: 600px) {
                         .skills-container .form-item, 
                         .achievements-container .form-item,
-                        .technologies-container .form-item {
+                        .technologies-container .form-item,
+                        .form-group .form-item {
                             flex: 1 0 100%;
                             max-width: 100%;
                             min-width: 100%;
@@ -187,6 +208,17 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                 <button class="remove-btn" type="button" onclick="removeContactField(this)">❌</button>
                             </div>`;
                         container.appendChild(newContactField);
+                    }
+                    function addCooperationField() {
+                        var container = document.querySelector(".form-group");
+                        var newFormField = document.createElement("div");
+                        newFormField.className = "form-item";
+                        newFormField.innerHTML = `
+                           <div class="flex-container">
+                                <input type="text" placeholder="Форма сотрудничества" />
+                                <button class="remove-btn" type="button" onclick="removeFormCoop(this)">❌</button>
+                            </div>`;
+                        container.appendChild(newFormField);
                     }
                     function addSkillField() {
                         var container = document.querySelector(".skills-container");
@@ -236,17 +268,20 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             <div class="section">
                                 <label>Достижения</label>
                                 <div class="achievements-container"></div>
-                                <button class="add-btn" type="button" onclick="addAchievementField()">➕ Добавить достижение</button>
+                                <button class="add-btn" type="button" onclick="addAchievementField(this)">➕ Добавить достижение</button>
                             </div>
                             <div class="section">
                                 <label>Технологии</label>
                                 <div class="technologies-container"></div>
-                                <button class="add-btn" type="button" onclick="addTechnologyField()">➕ Добавить технологию</button>
+                                <button class="add-btn" type="button" onclick="addTechnologyField(this)">➕ Добавить технологию</button>
                             </div>`;
                         container.appendChild(newExperienceEntry);
                     }
                     function removeContactField(button) {
                         button.closest('.contact').remove();
+                    }
+                    function removeFormCoop(button) {
+                        button.closest('.form-item').remove();
                     }
                     function removeSkillField(button) {
                         button.closest('.form-item').remove();
@@ -257,8 +292,8 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     function removeEducationField(button) {
                         button.closest('.education-entry').remove();
                     }
-                    function addAchievementField() {
-                        var container = document.querySelector(".achievements-container");
+                    function addAchievementField(button) {
+                        var container = button.closest(".section").querySelector(".achievements-container");
                         var newAchievementField = document.createElement("div");
                         newAchievementField.className = "form-item";
                         newAchievementField.innerHTML = `
@@ -271,8 +306,8 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     function removeAchievementField(button) {
                         button.closest('.form-item').remove();
                     }
-                    function addTechnologyField() {
-                        var container = document.querySelector(".technologies-container");
+                    function addTechnologyField(button) {
+                        var container = button.closest(".section").querySelector(".technologies-container");
                         var newTechnologyField = document.createElement("div");
                         newTechnologyField.className = "form-item";
                         newTechnologyField.innerHTML = `
@@ -285,6 +320,89 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     function removeTechnologyField(button) {
                         button.closest('.form-item').remove();
                     }
+                    function addEducationField() {
+                        var container = document.getElementById("educationContainer");
+                        var newEducationEntry = document.createElement("div");
+                        newEducationEntry.className = "education-entry";
+                        
+                        newEducationEntry.innerHTML = `
+                            <button class="remove-education-btn" type="button" onclick="removeEducationField(this)">❌</button>
+                            <div class="group-fields">
+                                <div class="section">
+                                    <label>Тип образования</label>
+                                    <select class="education-type" onchange="toggleAdditionalFieldsNew(this)">
+                                        <option value="MAIN">Основное</option>
+                                        <option value="TRAINING">Дополнительное</option>
+                                    </select>
+                                </div>
+                                <div class="section">
+                                    <label>Город обучения</label>
+                                    <input type="text" placeholder="Город обучения" />
+                                </div>
+                            </div>
+                            <div class="section">
+                                <label>Учебное заведение</label>
+                                <input type="text" placeholder="Учебное заведение" />
+                            </div>
+                            <div class="section">
+                                <label>Специальность</label>
+                                <input type="text" placeholder="Специальность" />
+                            </div>
+                            <div class="additional-fields" style="display: none;">
+                                <div class="group-fields">
+                                    <div class="section">
+                                        <label>Факультет</label>
+                                        <input type="text" placeholder="Факультет" />
+                                    </div>
+                                    <div class="section">
+                                        <label>Степень</label>
+                                        <input type="text" placeholder="Степень" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <label>Год окончания</label>
+                                <input type="number" placeholder="Год окончания" />
+                            </div>`;
+                    
+                        container.appendChild(newEducationEntry);
+                        var educationTypeSelect = newEducationEntry.querySelector('.education-type');
+                        toggleAdditionalFieldsNew(educationTypeSelect);
+                    }
+                    function toggleAdditionalFieldsNew(selectElement) {
+                        var additionalFields = selectElement.closest('.education-entry').querySelector('.additional-fields');
+                        if (selectElement.value === "MAIN") {
+                            additionalFields.style.display = "block"; 
+                        } else {
+                            additionalFields.style.display = "none"; 
+                        }
+                    }
+                    function autoResize(textarea) {
+                        textarea.style.height = 'auto'; 
+                        textarea.style.height = (textarea.scrollHeight) + 'px'; 
+                    }
+                    window.onload = function() {
+                        var aboutTextarea = document.getElementById("about");
+                        if (aboutTextarea) {
+                            autoResize(aboutTextarea);
+                        }
+                        var experienceTextures = document.querySelectorAll(".experience-description"); 
+                        experienceTextures.forEach(function(textarea) { 
+                            autoResize(textarea);
+                        });
+                        var educationEntries = document.querySelectorAll('.education-entry');
+                        educationEntries.forEach(function(entry) {
+                            var educationTypeSelect = entry.querySelector('.education-type');
+                            if (educationTypeSelect) {
+                                toggleAdditionalFields(educationTypeSelect);
+                            }
+                        });
+                        document.getElementById("educationContainer").addEventListener("change", function(event) {
+                            if (event.target.classList.contains("education-type")) {
+                                toggleAdditionalFields(event.target);
+                            }
+                        });
+                    };
                     """
                 }
             }
@@ -356,7 +474,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                         div("form-group") {
                             resume.cooperationForms.forEach { cooperation ->
                                 div("form-item") {
-                                    textInput { value = cooperation }
+                                    div("flex-container") {
+                                        textInput { value = cooperation }
+                                        button(classes = "remove-btn", type = ButtonType.button) {
+                                            +"❌"
+                                            attributes["onclick"] = "removeFormCoop(this)"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -387,7 +511,13 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     }
                     div("section") {
                         label { +"Обо мне" }
-                        textArea { id = "about"; rows = "4"; +resume.aboutMe }
+                        textArea {
+                            id = "about"
+                            rows = "1"
+                            +resume.aboutMe
+                            attributes["oninput"] = "autoResize(this)"
+                            classes = setOf("about-textarea")
+                        }
                     }
                     div("section") {
                         label { +"Опыт работы" }
@@ -425,7 +555,12 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                     }
                                     div("section") {
                                         label { +"Описание" }
-                                        textArea { +experience.description }
+                                        textArea {
+                                            rows = "1"
+                                            +experience.description
+                                            attributes["oninput"] = "autoResize(this)"
+                                            classes = setOf("about-textarea", "experience-description")
+                                        }
                                     }
                                     div("section") {
                                         label { +"Достижения" }
@@ -444,7 +579,7 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                         }
                                         button(classes = "add-btn", type = ButtonType.button) {
                                             +"➕ Добавить достижение"
-                                            attributes["onclick"] = "addAchievementField()"
+                                            attributes["onclick"] = "addAchievementField(this)"
                                         }
                                     }
                                     div("section") {
@@ -464,7 +599,7 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                         }
                                         button(classes = "add-btn", type = ButtonType.button) {
                                             +"➕ Добавить технологию"
-                                            attributes["onclick"] = "addTechnologyField()"
+                                            attributes["onclick"] = "addTechnologyField(this)"
                                         }
                                     }
                                 }
@@ -489,7 +624,7 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                     div("group-fields") {
                                         div("section") {
                                             label { +"Тип образования" }
-                                            select {
+                                            select(classes = "education-type") {
                                                 option { +"Основное"; value = "MAIN"; if (education.type == EducationDto.Type.MAIN) attributes["selected"] = "selected" }
                                                 option { +"Дополнительное"; value = "TRAINING"; if (education.type == EducationDto.Type.TRAINING) attributes["selected"] = "selected" }
                                             }
@@ -508,19 +643,21 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                         textInput { value = education.speciality }
                                     }
 
-                                    if (education.type == EducationDto.Type.MAIN) {
-                                        div("group-fields") {
-                                            div("section") {
-                                                label { +"Факультет" }
-                                                textInput { value = education.faculty ?: "" }
-                                            }
-                                            div("section") {
-                                                label { +"Степень" }
-                                                textInput { value = education.degree ?: "" }
+                                    div("additional-fields") {
+                                        if (education.type == EducationDto.Type.MAIN) {
+                                            div("group-fields") {
+                                                div("section") {
+                                                    label { +"Факультет" }
+                                                    textInput { value = education.faculty ?: "" }
+                                                }
+                                                div("section") {
+                                                    label { +"Степень" }
+                                                    textInput { value = education.degree ?: "" }
+                                                }
                                             }
                                         }
-                                    }
 
+                                    }
                                     div("section") {
                                         label { +"Год окончания" }
                                         input(InputType.number) { value = education.graduationDate.toString() }
