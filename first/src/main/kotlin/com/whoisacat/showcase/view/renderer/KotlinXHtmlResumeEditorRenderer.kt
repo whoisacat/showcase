@@ -377,6 +377,16 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             additionalFields.style.display = "none"; 
                         }
                     }
+                    function toggleAdditionalFields(selectElement) {
+                        var additionalFields = selectElement.closest('.education-entry').querySelector('.additional-fields');
+                    
+                        if (selectElement.value === "MAIN") {
+                            additionalFields.style.display = "block";
+                        } else {
+                            additionalFields.style.display = "none";
+                        }
+                    }
+
                     function autoResize(textarea) {
                         textarea.style.height = 'auto'; 
                         textarea.style.height = (textarea.scrollHeight) + 'px'; 
@@ -391,12 +401,15 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             autoResize(textarea);
                         });
                         var educationEntries = document.querySelectorAll('.education-entry');
-                        educationEntries.forEach(function(entry) {
-                            var educationTypeSelect = entry.querySelector('.education-type');
-                            if (educationTypeSelect) {
-                                toggleAdditionalFields(educationTypeSelect);
-                            }
-                        });
+                            educationEntries.forEach(function(entry) {
+                                var educationTypeSelect = entry.querySelector('.education-type');
+                                if (educationTypeSelect) {
+                                    toggleAdditionalFields(educationTypeSelect);
+                                    educationTypeSelect.addEventListener('change', function() {
+                                        toggleAdditionalFields(this);
+                                    });
+                                }
+                            });
                         document.getElementById("educationContainer").addEventListener("change", function(event) {
                             if (event.target.classList.contains("education-type")) {
                                 toggleAdditionalFields(event.target);
