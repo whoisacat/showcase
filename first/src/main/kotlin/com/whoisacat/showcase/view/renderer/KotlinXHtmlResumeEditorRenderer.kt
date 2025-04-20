@@ -416,6 +416,119 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             }
                         });
                     };
+                    submitResumeForm = function() {
+                        const dto = buildResumeCDto();
+                        fetch(`/resume-editor/${resume.id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(dto)
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            document.open();
+                            document.write(html);
+                            document.close();
+                        })
+                        .catch(error => {
+                            console.error("Ошибка при отправке резюме:", document.getElementById("message").innerText = "Ошибка при сохранении.");
+                        });
+                    }
+                    function buildResumeCDto() {
+                        return {
+                            id: "${resume.id}",
+                             label: document.getElementById("label").value,
+                              person: {
+                                lastName: document.getElementById("lastName").value,
+                                firstName: document.getElementById("firstName").value,
+                                 birthDate: document.getElementById("birthDate").value,
+                                  city: document.getElementById("city").value,
+                                   citizenship: document.getElementById("citizenship").value
+                            },
+                            contacts: collectContacts(),
+                            cooperationForms: collectTextInputs(".form-group input"),
+                            skills: collectTextInputs(".skills-container input"),
+                            aboutMe: document.getElementById("about").value,
+                            experience: collectExperience(),
+                            edu: collectEducation()
+                        };
+                    }
+                    function collectContacts() {
+                        const contacts = [];
+                    document.querySelectorAll("#contactsContainer .contact").forEach(contactEl => {
+                            const inputs = contactEl.querySelectorAll("input");
+                            if (inputs.length === 3) {
+                                contacts.push({
+                                    title: inputs[0].value,
+                                    text: inputs[1].value,
+                                    link: inputs[2].value || null
+                                });
+                            }
+                        });
+                        return contacts;
+                    }
+                    function collectTextInputs(selector) {
+                        return Array.from(document.querySelectorAll(selector))
+                            .map(input => input.value)
+                            .filter(value => value.trim() !== "");
+                    }
+                    function collectExperience() {
+                        const experienceList = [];
+                    document.querySelectorAll("#experienceContainer .experience-entry").forEach(entry => {
+                            const inputs = entry.querySelectorAll("input");
+                            const position = inputs[0].value;
+                            const companyTitle = inputs[1].value;
+                            const companyCity = inputs[2].value;
+                            const startDate = inputs[3].value;
+                            const endDate = inputs[4].value;
+                            const description = entry.querySelector("textarea").value;
+                            const achievements = Array.from(entry.querySelectorAll(".achievements-container input"))
+                                .map(i => i.value).filter(v => v.trim() !== "");
+                            const technologies = Array.from(entry.querySelectorAll(".technologies-container input"))
+                                .map(i => i.value).filter(v => v.trim() !== "");
+                            experienceList.push({
+                                position,
+                                companyTitle,
+                                companyCity,
+                                datePeriod: {
+                                    startDate,
+                                    endDate: endDate || null
+                                },
+                                description,
+                                achievements,
+                                technologies
+                            });
+                        });
+                        return experienceList;
+                    }
+                    function collectEducation() {
+                        const eduList = [];
+                    document.querySelectorAll("#educationContainer .education-entry").forEach(entry => {
+                            const type = entry.querySelector(".education-type").value;
+                            const inputs = entry.querySelectorAll("input");
+                            const residenceCity = inputs[0].value;
+                            const institution = inputs[1].value;
+                            const speciality = inputs[2].value;
+                            let faculty = null;
+                            let degree = null;
+                            if (type === "MAIN") {
+                                faculty = entry.querySelector("[name=faculty]")?.value || null;
+                                degree = entry.querySelector("[name=degree]")?.value || null;
+                            }
+                            const graduationDate = inputs[inputs.length - 1].value;
+                    eduList.push({
+                                type: type,
+                                residenceCity: residenceCity,
+                                institution: institution,
+                                speciality: speciality,
+                                faculty: faculty,
+                                degree: degree,
+                                graduationDate: graduationDate
+                            });
+                        });
+                        return eduList;
+                    }
                     """
                 }
             }
@@ -661,11 +774,17 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                                             div("group-fields") {
                                                 div("section") {
                                                     label { +"Факультет" }
-                                                    textInput { value = education.faculty ?: "" }
+                                                    textInput {
+                                                        value = education.faculty ?: ""
+                                                        attributes["name"] = "faculty"
+                                                    }
                                                 }
                                                 div("section") {
                                                     label { +"Степень" }
-                                                    textInput { value = education.degree ?: "" }
+                                                    textInput {
+                                                        value = education.degree ?: ""
+                                                        attributes["name"] = "degree"
+                                                    }
                                                 }
                                             }
                                         }
@@ -683,7 +802,11 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                             attributes["onclick"] = "addEducationField()"
                         }
                     }
-                    button { +"Сохранить изменения"; attributes["type"] = "submit" }
+                    button {
+                        +"Сохранить изменения"
+                        attributes["type"] = "button"
+                        attributes["onclick"] = "submitResumeForm()"
+                    }
                 }
                 div("message") { id = "message" }
             }
