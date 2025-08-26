@@ -1,0 +1,46 @@
+
+
+spring:
+  application:
+    name: showcase-front
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/show-case?authSource=admin
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: showcase-local
+            client-secret: PIRMz7nROzixhAGeCokEc1ouEkfq6v4D
+            authorization-grant-type: authorization_code
+            scope: openid, profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            provider: keycloak
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/show-case
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    oauth:
+      client-id: local-client
+      client-secret: AE0vOfVykNWR91eMjAPvKpgW9wlbOSG4
+server:
+  port: 8090
+
+services:
+  resume:
+    url: localhost:8100
+
+logging:
+  level:
+    com.whoisacat: trace
+    sun: warn
+    org:
+      springframework:
+        web: TRACE
+        security: trace
+    root: error

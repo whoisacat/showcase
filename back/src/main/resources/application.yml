@@ -1,0 +1,33 @@
+
+
+spring:
+  application:
+    name: showcase-back
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/show-case?authSource=admin
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/show-case
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    oauth:
+      client-id: showcase-local
+      client-secret: PIRMz7nROzixhAGeCokEc1ouEkfq6v4D
+server:
+  port: 8100
+logging:
+  level:
+    com.whoisacat: trace
+    sun: warn
+    org:
+      springframework:
+        web: TRACE
+        security: trace
+    root: error

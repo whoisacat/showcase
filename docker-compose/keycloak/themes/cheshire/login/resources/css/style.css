@@ -1,0 +1,58 @@
+body {
+    background: linear-gradient(180deg, #001f3f, #004080);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 350px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.logo img {
+    width: 100px;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    color: #222;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    background: #f2f7ff;
+}
+
+button#kc-login {
+    width: 100%;
+    padding: 0.8rem;
+    background: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button#kc-login:hover {
+    background: #0059c9;
+}

@@ -1,2 +1,4 @@
 rootProject.name = "showcase"
-include("first")
+include("back")
+include("front")
+include("back-contract")
