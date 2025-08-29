@@ -43,8 +43,8 @@ services:
       - 8082:8080
     restart: always
     volumes:
-      - ./docker-compose/keycloak/themes/cheshire:/opt/keycloak/themes/cheshire
-      - ./docker-compose/keycloak/realm.json:/opt/keycloak/data/import/realm.json
+      - ../docker-compose/keycloak/themes/cheshire:/opt/keycloak/themes/cheshire
+      - ../docker-compose/keycloak/realm.json:/opt/keycloak/data/import/realm.json
 
 volumes:
   data-volume:
