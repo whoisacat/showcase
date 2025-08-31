@@ -20,7 +20,7 @@ spring:
             provider: keycloak
         provider:
           keycloak:
-            issuer-uri: http://localhost:8082/realms/show-case
+            issuer-uri: http://show-case:8082/realms/show-case
 
 springdoc:
   swagger-ui:
@@ -33,7 +33,7 @@ server:
 
 services:
   resume:
-    url: localhost:8100
+    url: show-case:8100
 
 logging:
   level:

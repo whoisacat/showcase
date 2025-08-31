@@ -4,6 +4,7 @@ import com.whoisacat.showcase.contract.back.dto.EducationDto
 import com.whoisacat.showcase.contract.back.dto.ResumeCDto
 import kotlinx.html.ButtonType
 import kotlinx.html.InputType
+import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.button
 import kotlinx.html.classes
@@ -15,6 +16,7 @@ import kotlinx.html.h1
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.id
+import kotlinx.html.img
 import kotlinx.html.input
 import kotlinx.html.label
 import kotlinx.html.link
@@ -56,6 +58,12 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
                     input, textarea { 
                         width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
                         box-sizing: border-box; 
+                    }
+                    .logo img {
+                        max-height: 40px; /* подгоняется под высоту шапки */
+                        height: auto;
+                        width: auto;
+                        display: block;
                     }
                     .about-textarea {
                         width: 100%; 
@@ -566,6 +574,11 @@ class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
         }
         body {
             div("container") {
+                div("logo") {
+                    a(href = "/") {
+                        img(src = "/img.png", alt = "logo")
+                    }
+                }
                 h1 { +"Редактирование резюме" }
                 form {
                     id = "resumeForm"

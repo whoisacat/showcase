@@ -16,7 +16,21 @@
       }
     ]
   },
-
+  "users": [
+    {
+      "username": "who",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "who",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["redactor"]
+    }
+  ],
   "clients": [
     {
       "clientId": "showcase-local",
@@ -25,11 +39,11 @@
       "publicClient": false,
       "secret": "PIRMz7nROzixhAGeCokEc1ouEkfq6v4D",
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": [
-        "http://localhost:8090/login/oauth2/code/keycloak"
-      ],
       "webOrigins": [
-        "http://localhost:8090"
+        "http://show-case:8090"
+      ],
+      "redirectUris": [
+        "http://show-case:8090/*"
       ],
       "standardFlowEnabled": true,
       "implicitFlowEnabled": true,

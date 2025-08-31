@@ -150,4 +150,8 @@ class MongoResumeRepository(private val dao: ResumeDao) : ResumeRepository {
     override fun get(id: String): Resume {
         return dao.findById(id).orElseThrow {RuntimeException("Resume not found by id $id")}
     }
+
+    override fun findAll(): List<Resume> {
+        return dao.findAll()
+    }
 }

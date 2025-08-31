@@ -22,6 +22,7 @@ import kotlinx.html.h3
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.id
+import kotlinx.html.img
 import kotlinx.html.input
 import kotlinx.html.label
 import kotlinx.html.li
@@ -102,11 +103,11 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                         function $APPLY_SETTINGS(resumeId) {
                             let checkboxes = document.querySelectorAll('.${SETTINGS_CHECKBOX_CLASS}');
                             let selectedFields = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-                            let url = `/resume/${'$'}{resumeId}?fields=${'$'}{selectedFields.join(',')}`;
+                            let url = `/resume-page/${'$'}{resumeId}?fields=${'$'}{selectedFields.join(',')}`;
                             window.location.href = url;
                         }
                         function resetSettings(resumeId) {
-                            window.location.href = `/resume/${'$'}{resumeId}`;
+                            window.location.href = `/resume-page/${'$'}{resumeId}`;
                         }
                         window.onload = function() {
                             document.getElementById("settingsModal").addEventListener("click", function(event) {
@@ -141,6 +142,7 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                             padding: 20px;
                             box-sizing: border-box;
                         }
+                        
                         .header div {
                             flex: 1;
                             text-align: center;
@@ -155,6 +157,12 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
                         .header h2 {
                             align-self: flex-start;
                             margin-top: auto;
+                        }
+                        .logo img {
+                            max-height: 40px; /* подгоняется под высоту шапки */
+                            height: auto;
+                            width: auto;
+                            display: block;
                         }
                         .content {
                             max-width: 750px;
@@ -344,6 +352,11 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
         body {
             div("header-container") {
                 div("header") {
+                    div("logo") {
+                        a(href = "/") {
+                            img(src = "/img.png", alt = "logo")
+                        }
+                    }
                     div {
 
                         if (fields?.contains("person") != false) {

@@ -6,5 +6,5 @@ interface ResumeRepository {
     fun save(resume: Resume): Resume
     fun get(): Resume
     fun get(id: String): Resume
-
+    fun findAll(): List<Resume>
 }

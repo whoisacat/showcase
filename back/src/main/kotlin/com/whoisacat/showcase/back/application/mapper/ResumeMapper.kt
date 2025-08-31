@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget
     ExperienceMapper::class
 ])
 interface ResumeMapper {
-    fun mapToRead(dto: ResumeCDto, @MappingTarget resume: Resume)
+    fun update(dto: ResumeCDto, @MappingTarget resume: Resume)
     fun mapToRead(resume: Resume): ResumeDto
     fun mapToCreate(resume: Resume): ResumeCDto
 }

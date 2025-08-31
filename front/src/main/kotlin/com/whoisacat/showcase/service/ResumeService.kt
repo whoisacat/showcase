@@ -2,6 +2,7 @@ package com.whoisacat.showcase.service
 
 import com.whoisacat.showcase.contract.back.dto.ResumeCDto
 import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeListDto
 import com.whoisacat.showcase.infrastructure.ResumeClient
 import org.springframework.stereotype.Service
 
@@ -18,5 +19,9 @@ class ResumeService(val client: ResumeClient) {
 
     fun update(dto: ResumeCDto): ResumeCDto {
         return client.update(dto)
+    }
+
+    fun findAll(): List<ResumeListDto> {
+        return client.findAll()
     }
 }

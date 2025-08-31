@@ -22,7 +22,14 @@ class SecurityConfig(private val clientRegistrationRepository: ClientRegistratio
         http
             .authorizeHttpRequests {
                 it.requestMatchers("/", "/logout").permitAll()
-                it.requestMatchers(HttpMethod.GET, "/resume-page/*").permitAll()
+                it.requestMatchers(
+                    HttpMethod.GET,
+                    "img.png",
+                    "logo.png",
+                    "logo.svg",
+                    "favicon.ico",
+                    "/resume-page/*"
+                ).permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2Login { login ->
@@ -66,8 +73,7 @@ class SecurityConfig(private val clientRegistrationRepository: ClientRegistratio
 
     private fun oidcLogoutSuccessHandler(): OidcClientInitiatedLogoutSuccessHandler {
         val handler = OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository)
-
-        handler.setPostLogoutRedirectUri("http://localhost:8090/")
+        handler.setPostLogoutRedirectUri("http://show-case:8090/")
         return handler
     }
 }

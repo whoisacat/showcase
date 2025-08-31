@@ -4,6 +4,7 @@ import com.whoisacat.showcase.back.application.service.ResumeService
 import com.whoisacat.showcase.contract.back.controller.rest.ResumeRestContract
 import com.whoisacat.showcase.contract.back.dto.ResumeCDto
 import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeListDto
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.RestController
 
@@ -28,5 +29,9 @@ class ResumeRestController(
 
     override fun update(dto: ResumeCDto): ResumeCDto {
         return resumeService.update(dto)
+    }
+
+    override fun findAll(): List<ResumeListDto> {
+        return resumeService.findAll()
     }
 }

@@ -27,7 +27,7 @@ data class DatePeriod(val startDate: LocalDate, val endDate: LocalDate? = null) 
 
         return (if (years > 0) "$years ${getFormOfTimePeriod(years, YEAR)}" else "") +
                 (if (years > 0 && months > 0) " " else "") +
-                if (months > 0) "$months ${getFormOfTimePeriod(months, MOUNTH)}" else ""
+                if (months > 0) "$months ${getFormOfTimePeriod(months, MONTH)}" else ""
     }
 
     private fun getFormOfTimePeriod(years: Int, key: String): String {
@@ -47,7 +47,7 @@ data class DatePeriod(val startDate: LocalDate, val endDate: LocalDate? = null) 
 
     companion object {
         const val YEAR: String = "year"
-        const val MOUNTH: String = "mounth"
+        const val MONTH: String = "month"
         const val MANY = "many"
         const val FEW = "few"
         const val ONE = "one"
@@ -55,9 +55,9 @@ data class DatePeriod(val startDate: LocalDate, val endDate: LocalDate? = null) 
             Pair("$MANY$YEAR", "лет"),
             Pair("$FEW$YEAR", "года"),
             Pair("$ONE$YEAR", "год"),
-            Pair("$MANY$MOUNTH", "месяцов"),
-            Pair("$FEW$MOUNTH", "месяца"),
-            Pair("$ONE$MOUNTH", "месяц"),
+            Pair("$MANY$MONTH", "месяцов"),
+            Pair("$FEW$MONTH", "месяца"),
+            Pair("$ONE$MONTH", "месяц"),
 
             )
     }
