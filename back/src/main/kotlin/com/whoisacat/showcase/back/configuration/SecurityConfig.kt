@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletResponse
 import mu.KotlinLogging
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
@@ -33,11 +32,10 @@ class SecurityConfig {
 
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/resume/*").hasRole("redactor")
-                    .requestMatchers(HttpMethod.GET, "/resume/*",
-                        "/resume/:for-update/*").hasRole("redactor")
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/resume/read", "/resume/read/*")
+                    .permitAll()
+                    .requestMatchers("/resume/redact/*", "/resume/redact/**")
+                    .hasRole("redactor")
                     .anyRequest().authenticated()
             }
             .sessionManagement {
@@ -62,11 +60,13 @@ class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter { jwt: Jwt ->
             val authorities = mutableListOf<GrantedAuthority>()
 
-            val realmRoles = ((jwt.claims["realm_access"] as? Map<*, *>)?.get("roles") as? List<*>)?.map { "ROLE_$it" } ?: emptyList()
+            val realmRoles = ((jwt.claims["realm_access"] as? Map<*, *>)?.get("roles") as? List<*>)
+                ?.map { "ROLE_$it" } ?: emptyList()
             authorities.addAll(realmRoles.map { SimpleGrantedAuthority(it) })
 
             val clientId = "your-client-id"
-            val clientRoles = ((jwt.claims["resource_access"] as? Map<*, *>)?.get(clientId) as? Map<*, *>)?.get("roles") as? List<*>
+            val clientRoles = ((jwt.claims["resource_access"] as? Map<*, *>)?.get(clientId) as? Map<*, *>)
+                ?.get("roles") as? List<*>
             if (clientRoles != null) {
                 authorities.addAll(clientRoles.map { SimpleGrantedAuthority("ROLE_$it") })
             }
@@ -77,6 +77,7 @@ class SecurityConfig {
 
     @Bean
     fun accessDeniedHandler(): AccessDeniedHandler = AccessDeniedHandler { request, response, accessDeniedException ->
+        logger.trace { accessDeniedException}
         logger.warn("Access denied for user ${request.userPrincipal?.name} at ${request.requestURI}")
         response.sendError(HttpServletResponse.SC_FORBIDDEN)
     }

@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.view.renderer
 
 import com.whoisacat.showcase.contract.back.dto.EducationDto.Type
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import java.util.LinkedList
 import java.util.function.Consumer
 import java.util.function.Function
@@ -84,7 +84,7 @@ class KotlinXHtmlResumeRenderer : ResumeRenderer {
 
     private val logger = KotlinLogging.logger {}
 
-    override fun resumePage(resume: ResumeDto, fields: List<String>?) = createHTMLDocument().html {
+    override fun resumePage(resume: ResumeReadingDto, fields: List<String>?) = createHTMLDocument().html {
         head {
             meta(charset = "UTF-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")

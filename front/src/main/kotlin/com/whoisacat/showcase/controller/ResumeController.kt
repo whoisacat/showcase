@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.controller
 
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import com.whoisacat.showcase.service.ResumeService
 import com.whoisacat.showcase.view.renderer.ResumeEditorRenderer
 import com.whoisacat.showcase.view.renderer.ResumeRenderer
@@ -26,22 +26,22 @@ class ResumeController(
 
     @GetMapping("/resume-page/{id}", produces = [TEXT_HTML_UTF8])
     fun getById(@PathVariable id: String, @RequestParam fields: List<String>?): String {
-        val resume: ResumeDto = resumeService.getReadDto(id)
+        val resume: ResumeReadingDto = resumeService.getReadDto(id)
         logger.trace { "resume id ${resume.id}" }
         return resumeRenderer.resumePage(resume, fields)
     }
 
     @GetMapping("/resume-editor/{id}", produces = [TEXT_HTML_UTF8])
     fun getEditorById(@PathVariable id: String, request: HttpServletRequest): String {
-        val resume: ResumeCDto = resumeService.getCreateDto(id)
+        val resume: ResumeRedactingDto = resumeService.getCreateDto(id)
         logger.trace { "resume id ${resume.id}" }
         val csrf = request.getAttribute("_csrf") as CsrfToken
         return editRenderer.resumeEditorPage(resume, csrf)
     }
 
     @PutMapping("/resume-editor/{id}", produces = [TEXT_HTML_UTF8])
-    fun getUpdatedEditor(@RequestBody dto: ResumeCDto, request: HttpServletRequest): String {
-        val resume: ResumeCDto = resumeService.update(dto)
+    fun getUpdatedEditor(@RequestBody dto: ResumeRedactingDto, request: HttpServletRequest): String {
+        val resume: ResumeRedactingDto = resumeService.update(dto)
         logger.trace { "resume id ${resume.id} is updated" }
         val csrf = request.getAttribute("_csrf") as CsrfToken
         return editRenderer.resumeEditorPage(resume, csrf)

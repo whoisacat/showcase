@@ -34,20 +34,22 @@ class FeignConfig(private val authorizedClientService: OAuth2AuthorizedClientSer
     @Bean
     fun requestInterceptor(): RequestInterceptor {
         return RequestInterceptor { requestTemplate: RequestTemplate ->
-            val token: String? = getAccessToken(authorizedClientService)
-            logger.info("Access token: {}", token)
-            requestTemplate.header("Authorization", "Bearer $token")
+            val authentication = SecurityContextHolder.getContext().authentication
+
+            if (authentication is OAuth2AuthenticationToken) {
+                val client: OAuth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(
+                    authentication.authorizedClientRegistrationId,
+                    authentication.name
+                ) ?: return@RequestInterceptor
+
+                val token = client.accessToken.tokenValue
+                if (!token.isNullOrBlank()) {
+                    logger.debug("Adding Bearer token for {}", requestTemplate.path())
+                    requestTemplate.header("Authorization", "Bearer $token")
+                }
+            } else {
+                logger.debug("Anonymous user, no Authorization header added for {}", requestTemplate.path())
+            }
         }
-    }
-    fun getAccessToken(authorizedClientService: OAuth2AuthorizedClientService): String? {
-        val authentication = SecurityContextHolder.getContext().authentication
-        if (authentication is OAuth2AuthenticationToken) {
-            val client: OAuth2AuthorizedClient = authorizedClientService.loadAuthorizedClient(
-                authentication.authorizedClientRegistrationId,
-                authentication.name
-            ) ?: return null
-            return client.accessToken.tokenValue
-        }
-        return null
     }
 }

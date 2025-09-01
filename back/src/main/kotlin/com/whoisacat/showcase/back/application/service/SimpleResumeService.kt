@@ -2,8 +2,8 @@ package com.whoisacat.showcase.back.application.service
 
 import com.whoisacat.showcase.back.application.mapper.PersonMapper
 import com.whoisacat.showcase.back.application.mapper.ResumeMapper
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import com.whoisacat.showcase.back.domain.infrastructure.ResumeRepository
 import com.whoisacat.showcase.contract.back.dto.ResumeListDto
 import java.lang.RuntimeException
@@ -16,19 +16,19 @@ class SimpleResumeService(
     private val personMapper: PersonMapper
 ) : ResumeService {
 
-    override fun getReadDto(): ResumeDto {
+    override fun getReadDto(): ResumeReadingDto {
         return mapper.mapToRead(repository.get())
     }
 
-    override fun getReadDto(id: String): ResumeDto {
+    override fun getReadDto(id: String): ResumeReadingDto {
         return mapper.mapToRead(repository.get(id))
     }
 
-    override fun getCreateDto(id: String): ResumeCDto {
+    override fun getCreateDto(id: String): ResumeRedactingDto {
         return mapper.mapToCreate(repository.get(id))
     }
 
-    override fun update(dto: ResumeCDto): ResumeCDto {
+    override fun update(dto: ResumeRedactingDto): ResumeRedactingDto {
         if (dto.id == null) {
             throw RuntimeException("Can not update resume without id")
         } else {

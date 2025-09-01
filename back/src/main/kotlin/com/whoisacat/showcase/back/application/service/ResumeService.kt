@@ -1,13 +1,13 @@
 package com.whoisacat.showcase.back.application.service
 
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import com.whoisacat.showcase.contract.back.dto.ResumeListDto
 
 interface ResumeService {
-    fun getReadDto(): ResumeDto
-    fun getReadDto(id: String): ResumeDto
-    fun getCreateDto(id: String): ResumeCDto
-    fun update(dto: ResumeCDto): ResumeCDto
+    fun getReadDto(): ResumeReadingDto
+    fun getReadDto(id: String): ResumeReadingDto
+    fun getCreateDto(id: String): ResumeRedactingDto
+    fun update(dto: ResumeRedactingDto): ResumeRedactingDto
     fun findAll(): List<ResumeListDto>
 }

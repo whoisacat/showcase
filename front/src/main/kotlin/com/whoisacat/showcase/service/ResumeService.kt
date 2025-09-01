@@ -1,27 +1,31 @@
 package com.whoisacat.showcase.service
 
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import com.whoisacat.showcase.contract.back.dto.ResumeListDto
-import com.whoisacat.showcase.infrastructure.ResumeClient
+import com.whoisacat.showcase.infrastructure.ResumeReadingClient
+import com.whoisacat.showcase.infrastructure.ResumeRedactingClient
 import org.springframework.stereotype.Service
 
 @Service
-class ResumeService(val client: ResumeClient) {
+class ResumeService(
+    private val readingClient: ResumeReadingClient,
+    private val redactingClient: ResumeRedactingClient
+) {
 
-    fun getReadDto(id: String): ResumeDto {
-        return client.getCurrent(id, emptyList())
+    fun getReadDto(id: String): ResumeReadingDto {
+        return readingClient.getCurrent(id, emptyList())
     }
 
-    fun getCreateDto(id: String): ResumeCDto {
-        return client.getCurrentForEdit(id)
+    fun getCreateDto(id: String): ResumeRedactingDto {
+        return redactingClient.getCurrentForEdit(id)
     }
 
-    fun update(dto: ResumeCDto): ResumeCDto {
-        return client.update(dto)
+    fun update(dto: ResumeRedactingDto): ResumeRedactingDto {
+        return redactingClient.update(dto)
     }
 
     fun findAll(): List<ResumeListDto> {
-        return client.findAll()
+        return readingClient.findAll()
     }
 }

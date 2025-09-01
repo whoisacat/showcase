@@ -21,7 +21,7 @@ class SecurityConfig(private val clientRegistrationRepository: ClientRegistratio
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .authorizeHttpRequests {
-                it.requestMatchers("/", "/logout").permitAll()
+                it.requestMatchers("/", "/logout", "/error").permitAll()
                 it.requestMatchers(
                     HttpMethod.GET,
                     "img.png",

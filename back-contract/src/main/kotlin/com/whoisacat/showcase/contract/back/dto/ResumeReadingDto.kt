@@ -1,13 +1,13 @@
 package com.whoisacat.showcase.contract.back.dto
 
-data class ResumeCDto(
+data class ResumeReadingDto(
     val id: String? = null,
     val person: PersonDto,
     val contacts: Set<ContactDto>,
     val label: String,
     val cooperationForms: Set<String>,
     val aboutMe: String,
-    val experience: Set<ExperienceCDto>,
+    val experience: Set<ExperienceDto>,
     val edu: Set<EducationDto>,
     val skills: Set<String>
 )

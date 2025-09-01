@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.back.application.mapper
 
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
-import com.whoisacat.showcase.contract.back.dto.ResumeDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
+import com.whoisacat.showcase.contract.back.dto.ResumeReadingDto
 import com.whoisacat.showcase.back.domain.entity.Resume
 import org.mapstruct.Mapper
 import org.mapstruct.MappingTarget
@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget
     ExperienceMapper::class
 ])
 interface ResumeMapper {
-    fun update(dto: ResumeCDto, @MappingTarget resume: Resume)
-    fun mapToRead(resume: Resume): ResumeDto
-    fun mapToCreate(resume: Resume): ResumeCDto
+    fun update(dto: ResumeRedactingDto, @MappingTarget resume: Resume)
+    fun mapToRead(resume: Resume): ResumeReadingDto
+    fun mapToCreate(resume: Resume): ResumeRedactingDto
 }

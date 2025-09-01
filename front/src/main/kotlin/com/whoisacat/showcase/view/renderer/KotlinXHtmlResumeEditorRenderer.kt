@@ -1,7 +1,7 @@
 package com.whoisacat.showcase.view.renderer
 
 import com.whoisacat.showcase.contract.back.dto.EducationDto
-import com.whoisacat.showcase.contract.back.dto.ResumeCDto
+import com.whoisacat.showcase.contract.back.dto.ResumeRedactingDto
 import kotlinx.html.ButtonType
 import kotlinx.html.InputType
 import kotlinx.html.a
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class KotlinXHtmlResumeEditorRenderer: ResumeEditorRenderer {
-    override fun resumeEditorPage(resume: ResumeCDto, csrf: CsrfToken) = createHTMLDocument().html {
+    override fun resumeEditorPage(resume: ResumeRedactingDto, csrf: CsrfToken) = createHTMLDocument().html {
         head {
             meta { charset = "UTF-8" }
             meta { name = "viewport"; content = "width=device-width, initial-scale=1.0" }

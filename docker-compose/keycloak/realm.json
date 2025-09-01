@@ -19,6 +19,8 @@
   "users": [
     {
       "username": "who",
+      "firstName": "mr.",
+      "lastName": "who",
       "enabled": true,
       "emailVerified": true,
       "credentials": [
