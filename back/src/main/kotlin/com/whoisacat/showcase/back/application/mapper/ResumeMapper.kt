@@ -14,4 +14,5 @@ interface ResumeMapper {
     fun update(dto: ResumeRedactingDto, @MappingTarget resume: Resume)
     fun mapToRead(resume: Resume): ResumeReadingDto
     fun mapToCreate(resume: Resume): ResumeRedactingDto
+    fun map(dto: ResumeRedactingDto): Resume
 }

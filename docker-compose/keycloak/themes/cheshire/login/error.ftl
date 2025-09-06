@@ -8,7 +8,9 @@
 <body>
 <div class="login-container">
     <div class="logo">
-        <img src="${url.resourcesPath}/img/logo.svg" alt="Logo" />
+        <a href="${client.baseUrl}">
+            <img src="${url.resourcesPath}/img/logo.svg" alt="Logo" />
+        </a>
     </div>
 
     <h2>Oops!</h2>

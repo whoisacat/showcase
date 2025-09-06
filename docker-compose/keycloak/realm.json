@@ -44,6 +44,8 @@
       "webOrigins": [
         "http://show-case:8090"
       ],
+      "rootUrl": "http://show-case:8090",
+      "baseUrl": "/",
       "redirectUris": [
         "http://show-case:8090/*"
       ],
